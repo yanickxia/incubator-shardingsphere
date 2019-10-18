@@ -21,6 +21,7 @@ import lombok.Getter;
 import lombok.ToString;
 import org.apache.shardingsphere.core.exception.ShardingException;
 import org.apache.shardingsphere.core.parse.sql.segment.dml.expr.ExpressionSegment;
+import org.apache.shardingsphere.core.parse.sql.segment.dml.expr.complex.CommonExpressionSegment;
 import org.apache.shardingsphere.core.parse.sql.segment.dml.expr.simple.LiteralExpressionSegment;
 import org.apache.shardingsphere.core.parse.sql.segment.dml.expr.simple.ParameterMarkerExpressionSegment;
 
@@ -54,7 +55,7 @@ public final class InsertValueContext {
     private int calculateParametersCount(final Collection<ExpressionSegment> assignments) {
         int result = 0;
         for (ExpressionSegment each : assignments) {
-            if (each instanceof ParameterMarkerExpressionSegment) {
+            if (each instanceof ParameterMarkerExpressionSegment || each instanceof CommonExpressionSegment) {
                 result++;
             }
         }

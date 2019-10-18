@@ -19,6 +19,7 @@ package org.apache.shardingsphere.core.preprocessor.segment.insert;
 
 import com.google.common.collect.Lists;
 import org.apache.shardingsphere.core.parse.sql.segment.dml.expr.ExpressionSegment;
+import org.apache.shardingsphere.core.parse.sql.segment.dml.expr.complex.CommonExpressionSegment;
 import org.apache.shardingsphere.core.parse.sql.segment.dml.expr.simple.LiteralExpressionSegment;
 import org.apache.shardingsphere.core.parse.sql.segment.dml.expr.simple.ParameterMarkerExpressionSegment;
 import org.junit.Test;
@@ -79,6 +80,22 @@ public final class InsertValueContextTest {
         InsertValueContext insertValueContext = new InsertValueContext(assignments, parameters, 0);
         Object valueFromInsertValueContext = insertValueContext.getValue(0);
         assertThat(valueFromInsertValueContext, is(literalObject));
+    }
+
+    @Test
+    public void assertGetValueWhenCommonExpressionSegment() {
+        Collection<ExpressionSegment> assignments = makeParameterMarkerExpressionSegment();
+        String parameterValue = "test";
+        List<Object> parameters = Collections.<Object>singletonList(parameterValue);
+        int parametersOffset = 0;
+        InsertValueContext insertValueContext = new InsertValueContext(assignments, parameters, parametersOffset);
+        Object valueFromInsertValueContext = insertValueContext.getValue(0);
+        assertThat((String) valueFromInsertValueContext, is(parameterValue));
+    }
+
+    private Collection<ExpressionSegment> makeCommonExpressionSegment() {
+        CommonExpressionSegment commonExpressionSegment = new CommonExpressionSegment(0, 10, "lower()");
+        return Collections.<ExpressionSegment>singleton(commonExpressionSegment);
     }
     
     private Collection<ExpressionSegment> makeLiteralExpressionSegment(final Object literalObject) {
